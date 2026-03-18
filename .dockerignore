@@ -1,0 +1,10 @@
+.git
+.gitmodules
+
+__pycache__/
+.ipynb_checkpoints/
+
+*.ipynb
+
+.venv
+NTIRE2026/
