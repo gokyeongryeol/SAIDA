@@ -29,7 +29,7 @@ class CoDETR(AbstractObjectDetector):
         raise NotImplementedError("CODETR does not support text prompts.")
 
     def pred(self, image_path: str) -> list[DetectedObject]:
-        output = self.inferencer(image_path, draw_pred=False, pred_score_thr=0.03)['predictions'][0]
+        output = self.inferencer(image_path, draw_pred=False, pred_score_thr=0.0)['predictions'][0]
 
         result = []
         if "bboxes" in output and len(output["bboxes"]) > 0:

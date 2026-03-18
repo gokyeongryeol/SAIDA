@@ -94,16 +94,14 @@ class ZeroAPI(AbstractObjectDetector):
 
                 for prompt in prompts:
                     bbox_xyxy = self._bbox_xywh_to_xyxy(prompt['bbox_xywh'])
-                    cropped_img = img.crop(bbox_xyxy)
-                    encoded_image = self._encode_image(cropped_img)
+                    encoded_image = self._encode_image(img)
 
                     p = {
                         'prompt_image': encoded_image,
                         'prompts': [
                             {
                                 'text': prompt['class_name'],
-                                # box is the whole cropped image
-                                'box': [0, 0, cropped_img.size[0], cropped_img.size[1]],
+                                'box': bbox_xyxy,
                                 'box_threshold': 0.03,
                                 'multimodal_threshold': 0.03,
                             }
