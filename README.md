@@ -46,12 +46,12 @@ DOCKER_BUILDKIT=1 docker build -t saida .
 
 #### 1. Challenge dataset
 
-Place the challenge dataset ([google drive](https://drive.google.com/drive/folders/19Ylfklp2TW_HijR2ZrVt-ayMNQfo__T2)) under `NTIRE2026/`.
+Place the challenge dataset ([google drive](https://drive.google.com/drive/folders/19Ylfklp2TW_HijR2ZrVt-ayMNQfo__T2)) under `./NTIRE2026/`.
 
 
 #### 2. Model checkpoints
 
-Place the fine-tuned Co-DETR model checkpoints under `weights/`:
+Place the fine-tuned Co-DETR model checkpoints under `./weights/`:
 
 ```bash
 bash download.sh
