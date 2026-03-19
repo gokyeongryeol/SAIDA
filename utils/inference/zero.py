@@ -53,9 +53,9 @@ class ZeroAPI(AbstractObjectDetector):
             fext = os.path.splitext(image_path)[-1][1:].lower()  # get file extension without dot
         elif isinstance(image_path, Image.Image):
             buffered = io.BytesIO()
-            image_path.save(buffered, format="jpeg")
+            image_path.save(buffered, format="PNG")
             image_bytes = buffered.getvalue()
-            fext = "jpg"
+            fext = "png"
         else:
             raise NotImplementedError
 

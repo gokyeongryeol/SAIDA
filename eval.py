@@ -26,7 +26,7 @@ for data_name in ["dataset1", "dataset2", "dataset3"]:
     with open(f"{PATH_ROOT}/NTIRE2026/{data_name}/annotations/1_shot.json") as f:
         data = json.load(f)
         CLASS_INFO[data_name] = [
-            cat_dict["name"] for cat_dict in sorted(data['categories'], key=lambda x: x['id'])
+            cat_dict["name"] for cat_dict in data['categories']
         ]
 
 CFG = {
