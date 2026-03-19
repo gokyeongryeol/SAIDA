@@ -19,7 +19,9 @@ class CoDETR(AbstractObjectDetector):
             cfg.model = ConfigDict(**cfg.tta_model, module=cfg.model)
             cfg.test_dataloader.dataset.pipeline = cfg.tta_pipeline
 
-        self.inferencer = DetInferencer(model=cfg, weights=path_weights)
+        self.inferencer = DetInferencer(
+            model=cfg, weights=path_weights, show_progress=False,
+        )
         self.clsas_names = class_names
 
     def set_visual_prompts(self, visual_prompts: list[VisualPrompt]):
@@ -29,7 +31,7 @@ class CoDETR(AbstractObjectDetector):
         raise NotImplementedError("CODETR does not support text prompts.")
 
     def pred(self, image_path: str) -> list[DetectedObject]:
-        output = self.inferencer(image_path, draw_pred=False, pred_score_thr=0.0)['predictions'][0]
+        output = self.inferencer(image_path, draw_pred=False)['predictions'][0]
 
         result = []
         if "bboxes" in output and len(output["bboxes"]) > 0:
