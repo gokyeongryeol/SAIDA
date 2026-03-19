@@ -12,7 +12,7 @@ fi
 
 echo "Using GPUs: ${GPUS[@]}"
 
-run_eval() {
+run_zero() {
     local GPU_ID=$1
     local data_name=$2
     local shot=$3
@@ -27,7 +27,7 @@ run_eval() {
             "${data_name}" "${shot}"
 }
 
-run_test() {
+run_codetr() {
     local GPU_ID=$1
     local data_name=$2
     local shot=$3
@@ -58,13 +58,13 @@ for data_name in dataset1 dataset2 dataset3; do
         echo "[GPU ${GPU_ID}] ${data_name} ${shot}"
 
         if [[ "$data_name" == "dataset3" && "$shot" -eq 1 ]]; then
-            run_eval "$GPU_ID" "$data_name" "$shot" &
+            run_zero "$GPU_ID" "$data_name" "$shot" &
 
         elif [[ "$data_name" == "dataset3" || ( "$data_name" == "dataset1" && "$shot" -eq 10 ) ]]; then
-            run_test "$GPU_ID" "$data_name" "$shot" "" &
+            run_codetr "$GPU_ID" "$data_name" "$shot" "" &
 
         else
-            run_test "$GPU_ID" "$data_name" "$shot" "--tta" &
+            run_codetr "$GPU_ID" "$data_name" "$shot" "--tta" &
         fi
 
     done
