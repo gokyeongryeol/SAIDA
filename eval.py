@@ -182,7 +182,7 @@ def prepare_text_queries(data_root, k):
     coco = COCO(f"{data_root}/annotations/{k}_shot.json")
     queries = []
 
-    for cat_dict in sorted(coco.cats.values(), key=lambda x: x['id']):
+    for cat_dict in coco.cats.values():
         queries.append(TextPrompt(
             class_name=cat_dict["name"],
         ))

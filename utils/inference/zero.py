@@ -90,11 +90,9 @@ class ZeroAPI(AbstractObjectDetector):
                 prompts_by_image_path[prompt['image_path']].append(prompt)
 
             for image_path, prompts in prompts_by_image_path.items():
-                img = Image.open(image_path).convert("RGB")
-
                 for prompt in prompts:
                     bbox_xyxy = self._bbox_xywh_to_xyxy(prompt['bbox_xywh'])
-                    encoded_image = self._encode_image(img)
+                    encoded_image = self._encode_image(image_path)
 
                     p = {
                         'prompt_image': encoded_image,
