@@ -12,41 +12,8 @@ fi
 
 echo "Using GPUs: ${GPUS[@]}"
 
-run_zero() {
-    local GPU_ID=$1
-    local data_name=$2
-    local shot=$3
-
-    docker run --rm \
-        --gpus "device=${GPU_ID}" \
-        -e SERVER_IP=${SERVER_IP} \
-        -v "$(pwd)/NTIRE2026/":/workspace/NTIRE2026/ \
-        -v "$(pwd)/submit/":/workspace/submit/ \
-        -v "$(pwd)/weights/":/workspace/weights/ \
-        --entrypoint python saida /workspace/eval.py \
-            "${data_name}" "${shot}"
-}
-
-run_codetr() {
-    local GPU_ID=$1
-    local data_name=$2
-    local shot=$3
-    local USE_TTA=$4
-
-    docker run --rm \
-        --gpus "device=${GPU_ID}" \
-        --shm-size=8G \
-        -e DATA_ROOT=/workspace/NTIRE2026/${data_name}/ \
-        -v "$(pwd)/NTIRE2026/":/workspace/NTIRE2026/ \
-        -v "$(pwd)/submit/":/workspace/submit/ \
-        -v "$(pwd)/weights/":/workspace/weights/ \
-        --entrypoint bash saida /workspace/mmdet_eval.sh \
-            ${data_name} ${shot} ${USE_TTA}
-}
-
 for data_name in dataset1 dataset2 dataset3; do
     for shot in 1 5 10; do
-
         # GPU slot wait
         while (( $(jobs -rp | wc -l) >= NUM_GPUS )); do
             wait -n
@@ -57,15 +24,16 @@ for data_name in dataset1 dataset2 dataset3; do
 
         echo "[GPU ${GPU_ID}] ${data_name} ${shot}"
 
-        if [[ "$data_name" == "dataset3" && "$shot" -eq 1 ]]; then
-            run_zero "$GPU_ID" "$data_name" "$shot" &
-
-        elif [[ "$data_name" == "dataset3" || ( "$data_name" == "dataset1" && "$shot" -eq 10 ) ]]; then
-            run_codetr "$GPU_ID" "$data_name" "$shot" "" &
-
-        else
-            run_codetr "$GPU_ID" "$data_name" "$shot" "--tta" &
-        fi
+        docker run --rm \
+          --gpus "device=${GPU_ID}" \
+          --shm-size=8G \
+          -e SERVER_IP=${SERVER_IP} \
+          -v "$(pwd)/NTIRE2026/":/workspace/NTIRE2026/ \
+          -v "$(pwd)/submit/":/workspace/submit/ \
+          -v "$(pwd)/weights/":/workspace/weights/ \
+          --entrypoint python saida eval.py \
+          "${data_name}" \
+          "${shot}" &
 
     done
 done
